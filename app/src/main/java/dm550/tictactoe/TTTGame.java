@@ -61,7 +61,7 @@ public class TTTGame implements Game {
 
     @Override
     public void checkResult() {
-        int winner = this.board.checkWinning();
+        int winner = this.board.checkWinning(board.board);
         if (winner > 0) {
             this.ui.showResult("Player "+winner+" wins!");
         }
