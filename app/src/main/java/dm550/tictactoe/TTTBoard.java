@@ -114,17 +114,13 @@ public class TTTBoard {
         return 0;
     }
     private int checkVert(int dx, int dy){//tjekker den vandret oppe og nede
-        if(this.board[dx][0] == this.board[dx+1][0] && this.board[dx][0] == this.board[dx-1][0] && this.board[dx][0] != 0) //side-til-side
-            return 1;
-        if(this.board[dx][size-1] == this.board[dx+1][size-1] && this.board[dx][size-1] == this.board[dx-1][size-1] && this.board[dx][size-1] != 0) //side-til-side
+        if(this.board[dx][dy] == this.board[dx+1][dy] && this.board[dx][dy] == this.board[dx-1][dy] && this.board[dx][dy] != 0) //side-til-side
             return 1;
         else
-            return 0;
+           return 0;
     }
     private int checkHori(int dx, int dy){ // Tjekker den lodret højre og venstre
-        if(this.board[0][dy] == this.board[0][dy+1] && this.board[0][dy] == this.board[0][dy-1] && this.board[0][dy] != 0) //side-til-side
-            return 1;
-        if(this.board[size-1][dy] == this.board[size-1][dy+1] && this.board[size-1][dy] == this.board[size-1][dy-1] && this.board[size-1][dy] != 0) //side-til-side
+        if(this.board[dx][dy] == this.board[dx][dy+1] && this.board[dx][dy] == this.board[dx][dy-1] && this.board[dx][dy] != 0) //side-til-side
             return 1;
         else
             return 0;
