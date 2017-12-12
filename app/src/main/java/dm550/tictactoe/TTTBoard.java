@@ -3,6 +3,9 @@ package dm550.tictactoe;
 import android.util.EventLog;
 import android.util.Log;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static android.content.ContentValues.TAG;
 
 /** represents a tic tac toe board of a given size */
@@ -13,7 +16,7 @@ public class TTTBoard {
      * board[x][y] == 0   signifies free at position (x,y)
      * board[x][y] == i   for i > 0 signifies that Player i made a move on (x,y)
      */
-    private int[][] board = new int[][] {
+    public int[][] board = new int[][] {
             {0, 0, 0},
             {0, 0, 0},
             {0, 0, 0}
@@ -90,23 +93,23 @@ public class TTTBoard {
     /** returns 0 if no player has won (yet)
      * otherwise returns the number of the player that has three in a row
      */
-    public int checkWinning() {
+    public int checkWinning(int[][] thisBoard) {
         int vundet = 0;
-        for (int o = 1; o < this.board.length-1; o++){ //Tjekker alle felter bortset fra kanter
-            for(int u = 1; u < this.board[o].length-1; u++){ //tjekker alle falter bortset fra kant
+        for (int o = 1; o < thisBoard.length-1; o++){ //Tjekker alle felter bortset fra kanter
+            for(int u = 1; u < thisBoard[o].length-1; u++){ //tjekker alle falter bortset fra kant
                 if(checkSequence(o,u) == 1)
-                    vundet = this.board[o][u];
+                    vundet = thisBoard[o][u];
                 if(vundet != 0)
                     return vundet;
             }
             if(checkVert(o,0) == 1)
-                vundet = this.board[o][0];
-            if(checkVert(o, this.board.length-1) == 1)
-                vundet = this.board[o][this.board.length-1];
+                vundet = thisBoard[o][0];
+            if(checkVert(o, thisBoard.length-1) == 1)
+                vundet = thisBoard[o][thisBoard.length-1];
             if(checkHori(0,o) == 1)
-                vundet = this.board[0][o];
-            if(checkHori(this.board.length-1,o) == 1)
-                vundet = this.board[this.board.length-1][o];
+                vundet = thisBoard[0][o];
+            if(checkHori(thisBoard.length-1,o) == 1)
+                vundet = thisBoard[thisBoard.length-1][o];
         }
 
         if(vundet != 0)
@@ -117,7 +120,7 @@ public class TTTBoard {
         if(this.board[dx][dy] == this.board[dx+1][dy] && this.board[dx][dy] == this.board[dx-1][dy] && this.board[dx][dy] != 0) //side-til-side
             return 1;
         else
-           return 0;
+            return 0;
     }
     private int checkHori(int dx, int dy){ // Tjekker den lodret højre og venstre
         if(this.board[dx][dy] == this.board[dx][dy+1] && this.board[dx][dy] == this.board[dx][dy-1] && this.board[dx][dy] != 0) //side-til-side
@@ -157,6 +160,45 @@ public class TTTBoard {
             result += "\n";
         }
         return result;
+    }
+    //AI
+    public int aiRecursive(int[][] aiBoard, int spillerensTal){
+        int spillerTal = 1;
+        int aiTal = 2;
+        int[][] scoreBoard = new int[aiBoard.length][aiBoard[0].length];
+        int[][][] alleScoreBoards = new int[][][]{};
+
+        if (checkWinning(aiBoard) == 1)
+            return 10;
+        else if (checkWinning(aiBoard) == 2)
+            return -10;
+        else if (checkWinning(aiBoard) == 0)
+            return 0;
+
+        for(int x = 0; x < aiBoard.length; x++){
+            for(int y = 0; y < aiBoard[x].length; y++){
+                if(aiBoard[x][y] == 0){
+                    aiBoard[x][y] = spillerensTal;
+
+                    if(spillerensTal == 2){
+                        int result = aiRecursive(aiBoard, aiTal);
+                        scoreBoard[x][y] = result;
+                    }
+                    if(spillerensTal == 1){
+                        int result = aiRecursive(aiBoard, spillerTal);
+                        scoreBoard[x][y] = result;
+                    }
+                    aiBoard[x][y] = 0;
+
+                }
+                else{
+                    break;
+                }
+
+            }
+        }
+
+        return 10;
     }
 
 }
