@@ -3,6 +3,7 @@ package dm550.tictactoe;
 import android.util.EventLog;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class TTTBoard {
             {0, 0, 0},
             {0, 0, 0}
     };
+    public int[] bestMove = new int[]{}; //AiRecursive
+    private int intRecursive = 0;
     
     /** size of the (quadratic) board */
     private int size;
@@ -64,9 +67,14 @@ public class TTTBoard {
      * checks that the player number is valid 
      */
     public void addMove(Coordinate c, int player) {
+        //aiRecursive(this.board, player);
         if(c.getY() <= getSize()-1 && c.getX() <= getSize()-1){
               try{
-                  this.board[c.getX()][c.getY()] = player;
+                  aiRecursive(this.board, player);
+                  if(player == 1)
+                      this.board[c.getX()][c.getY()] = player;
+                  if(player == 2)
+                      this.board[bestMove[0]][bestMove[1]] = player;
               }
               catch (IllegalArgumentException e){
                   Log.d(TAG, "Fejl ved add move");
@@ -165,8 +173,9 @@ public class TTTBoard {
     public int aiRecursive(int[][] aiBoard, int spillerensTal){
         int spillerTal = 1;
         int aiTal = 2;
-        int[][] scoreBoard = new int[aiBoard.length][aiBoard[0].length];
-        int[][][] alleScoreBoards = new int[][][]{};
+        int[][] scoreBoard = new int[aiBoard.length - 1][aiBoard[0].length];
+        //int[][] alleScoreBoards = new int[][]{};
+        //ArrayList<int[][]> alleScoreBoards = new ArrayList<>();
 
         if (checkWinning(aiBoard) == 1)
             return 10;
@@ -175,16 +184,18 @@ public class TTTBoard {
         else if (checkWinning(aiBoard) == 0)
             return 0;
 
-        for(int x = 0; x < aiBoard.length; x++){
-            for(int y = 0; y < aiBoard[x].length; y++){
+        for(int x = 0; x < aiBoard.length - 1; x++){
+            for(int y = 0; y < aiBoard[x].length - 1; y++){
                 if(aiBoard[x][y] == 0){
                     aiBoard[x][y] = spillerensTal;
 
                     if(spillerensTal == 2){
+                        intRecursive += 1;
                         int result = aiRecursive(aiBoard, aiTal);
                         scoreBoard[x][y] = result;
                     }
                     if(spillerensTal == 1){
+                        intRecursive += 1;
                         int result = aiRecursive(aiBoard, spillerTal);
                         scoreBoard[x][y] = result;
                     }
@@ -197,8 +208,36 @@ public class TTTBoard {
 
             }
         }
+        determineBestMove(scoreBoard, spillerensTal);
+        return 0;
+    }
+    public void determineBestMove(int[][] scoreBoard, int spillerensTal){
 
-        return 10;
+        if(spillerensTal == 2){ //Aiens tal er 2
+            int bestScore = -10000;
+            for (int x = 0; x < scoreBoard.length - 1; x++){
+                for(int y = 0; y < scoreBoard[x].length - 1; y++){
+                    if(scoreBoard[x][y] > bestScore){
+                        bestScore = scoreBoard[x][y];
+                        bestMove[0] = x;
+                        bestMove[1] = y;
+                    }
+                }
+            }
+        }
+        else{
+            int bestScore = 10000;
+            for (int x = 0; x < scoreBoard.length - 1; x++){
+                for(int y = 0; y < scoreBoard[x].length - 1; y++){
+                    if(scoreBoard[x][y] < bestScore){
+                        bestScore = scoreBoard[x][y];
+                        bestMove[0] = x;
+                        bestMove[1] = y;
+                    }
+                }
+            }
+        }
+
     }
 
 }

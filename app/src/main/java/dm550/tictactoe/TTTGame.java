@@ -32,6 +32,7 @@ public class TTTGame implements Game {
     @Override
     public void addMove(Coordinate pos) {
         this.board.addMove(pos, this.currentPlayer);
+
         if (this.currentPlayer == this.numPlayers) {
             this.currentPlayer = 1;
         } else {
