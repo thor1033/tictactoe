@@ -22,8 +22,9 @@ public class TTTBoard {
             {0, 0, 0},
             {0, 0, 0}
     };
-    public int[] bestMove = new int[]{}; //AiRecursive
+    public int[] bestMove = {1, 2}; //AiRecursive
     private int intRecursive = 0;
+    private int recursiveResult = 0;
     
     /** size of the (quadratic) board */
     private int size;
@@ -67,14 +68,14 @@ public class TTTBoard {
      * checks that the player number is valid 
      */
     public void addMove(Coordinate c, int player) {
-        //aiRecursive(this.board, player);
         if(c.getY() <= getSize()-1 && c.getX() <= getSize()-1){
               try{
-                  aiRecursive(this.board, player);
                   if(player == 1)
                       this.board[c.getX()][c.getY()] = player;
-                  if(player == 2)
+                  if(player == 2){
+                      aiRecursive(this.board, player);
                       this.board[bestMove[0]][bestMove[1]] = player;
+                  }
               }
               catch (IllegalArgumentException e){
                   Log.d(TAG, "Fejl ved add move");
@@ -170,74 +171,76 @@ public class TTTBoard {
         return result;
     }
     //AI
-    public int aiRecursive(int[][] aiBoard, int spillerensTal){
-        int spillerTal = 1;
-        int aiTal = 2;
-        int[][] scoreBoard = new int[aiBoard.length - 1][aiBoard[0].length];
+    public void aiRecursive(int[][] aiBoard, int spillerensTal){
+        //int spillerTal = 1;
+        //int aiTal = 2;
+        //int result;
+        int[] godtFelt = new int[2];
+        ArrayList<move> scoreBoard = new ArrayList<>();
         //int[][] alleScoreBoards = new int[][]{};
         //ArrayList<int[][]> alleScoreBoards = new ArrayList<>();
 
         if (checkWinning(aiBoard) == 1)
-            return 10;
+            recursiveResult += 10;
         else if (checkWinning(aiBoard) == 2)
-            return -10;
-        else if (checkWinning(aiBoard) == 0)
-            return 0;
+            recursiveResult += -10;
+        else{
+            recursiveResult += 0;
+        }
 
-        for(int x = 0; x < aiBoard.length - 1; x++){
-            for(int y = 0; y < aiBoard[x].length - 1; y++){
+        for(int x = 0; x < aiBoard.length; x++){
+            for(int y = 0; y < aiBoard[x].length; y++){
                 if(aiBoard[x][y] == 0){
+                    int[] plads = new int[]{x,y};
+                    move nytMove = new move(plads, 0);
                     aiBoard[x][y] = spillerensTal;
 
                     if(spillerensTal == 2){
-                        intRecursive += 1;
-                        int result = aiRecursive(aiBoard, aiTal);
-                        scoreBoard[x][y] = result;
+                        nytMove.score = recursiveResult;
+                        aiRecursive(aiBoard, 1);
                     }
-                    if(spillerensTal == 1){
-                        intRecursive += 1;
-                        int result = aiRecursive(aiBoard, spillerTal);
-                        scoreBoard[x][y] = result;
+                    else{
+                        nytMove.score = recursiveResult;
+                        aiRecursive(aiBoard, 2);
+
                     }
+
+                    scoreBoard.add(nytMove);
+                    recursiveResult = 0;
                     aiBoard[x][y] = 0;
-
                 }
-                else{
-                    break;
-                }
-
             }
         }
-        determineBestMove(scoreBoard, spillerensTal);
-        return 0;
+        //Log.d(TAG, scoreBoard[0][0] + " " + scoreBoard[0][1] + " " + scoreBoard[0][2]);
+        //Log.d(TAG, scoreBoard[1][0] + " " + scoreBoard[1][1] + " " + scoreBoard[1][2]);
+        //Log.d(TAG, scoreBoard[2][0] + " " + scoreBoard[2][1] + " " + scoreBoard[2][2]);
+        if(spillerensTal == 2){ //Aiens tal er 2
+            int bestScore = -10000;
+            for (int x = 0; x < scoreBoard.size(); x++){
+                    if(scoreBoard.get(x).score > bestScore && this.board[scoreBoard.get(x).index[0]][scoreBoard.get(x).index[1]] == 0){
+                        bestScore = scoreBoard.get(x).score;
+                        bestMove[0] = scoreBoard.get(x).index[0];
+                        bestMove[1] = scoreBoard.get(x).index[1];
+                    }
+                }
+            }
+        else{
+            int bestScore = 10000;
+            for (int x = 0; x < scoreBoard.size(); x++){
+                if(scoreBoard.get(x).score < bestScore && this.board[scoreBoard.get(x).index[0]][scoreBoard.get(x).index[1]] == 0){
+                    bestScore = scoreBoard.get(x).score;
+                    godtFelt[0] = scoreBoard.get(x).index[0];
+                    godtFelt[1] = scoreBoard.get(x).index[1];
+                }
+            }
+        }
+        Log.d(TAG, bestMove[0] + " " + bestMove[1]);
+        bestMove[0] = godtFelt[0];
+        bestMove[1] = godtFelt[1];
     }
     public void determineBestMove(int[][] scoreBoard, int spillerensTal){
 
-        if(spillerensTal == 2){ //Aiens tal er 2
-            int bestScore = -10000;
-            for (int x = 0; x < scoreBoard.length - 1; x++){
-                for(int y = 0; y < scoreBoard[x].length - 1; y++){
-                    if(scoreBoard[x][y] > bestScore){
-                        bestScore = scoreBoard[x][y];
-                        bestMove[0] = x;
-                        bestMove[1] = y;
-                    }
-                }
-            }
-        }
-        else{
-            int bestScore = 10000;
-            for (int x = 0; x < scoreBoard.length - 1; x++){
-                for(int y = 0; y < scoreBoard[x].length - 1; y++){
-                    if(scoreBoard[x][y] < bestScore){
-                        bestScore = scoreBoard[x][y];
-                        bestMove[0] = x;
-                        bestMove[1] = y;
-                    }
-                }
-            }
-        }
 
     }
-
 }
+
