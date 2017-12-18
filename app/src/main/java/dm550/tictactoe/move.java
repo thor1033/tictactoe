@@ -5,7 +5,7 @@ package dm550.tictactoe;
  */
 
 public class move {
-    public int[] index;
+    public int[] index = new int[2];
     public int score;
 
     public move(int[] Index, int Score){

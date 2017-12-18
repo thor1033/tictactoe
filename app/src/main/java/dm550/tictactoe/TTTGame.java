@@ -16,12 +16,15 @@ public class TTTGame implements Game {
     
     /** the gui for board games */
     private UserInterface ui;
+
+    private boolean aiOn; //Tjekker ai checkbox er på
     
     /** constructor that gets the number of players */
-    public TTTGame(int numPlayers) {
+    public TTTGame(int numPlayers, boolean aiCheckbox) {
         this.currentPlayer = 1;
         this.numPlayers = numPlayers;
         this.board = new TTTBoard(numPlayers);
+        aiOn = aiCheckbox;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class TTTGame implements Game {
 
     @Override
     public void addMove(Coordinate pos) {
-        this.board.addMove(pos, this.currentPlayer);
+        this.board.addMove(pos, this.currentPlayer, aiOn);
         if (this.currentPlayer == this.numPlayers) {
             this.currentPlayer = 1;
         } else {
@@ -61,11 +64,11 @@ public class TTTGame implements Game {
 
     @Override
     public void checkResult() {
-        int winner = this.board.checkWinning(board.board);
+        int winner = this.board.checkWinning(this.board.board);
         if (winner > 0) {
             this.ui.showResult("Player "+winner+" wins!");
         }
-        if (this.board.checkFull()) {
+        else if (this.board.checkFull(this.board.board) && winner == 0 ) {
             this.ui.showResult("This is a DRAW!");
         }
     }

@@ -1,10 +1,12 @@
 package dm550.tictactoe;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TableLayout;
@@ -24,6 +26,9 @@ public class AppUI extends AppCompatActivity implements UserInterface {
 
     @Override
     public void onBackPressed() {
+        final CheckBox cb = new CheckBox(this);
+        cb.setText("Spil mod AI");
+        cb.setTextColor(Color.RED);
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         TextView tv = new TextView(this);
@@ -38,10 +43,11 @@ public class AppUI extends AppCompatActivity implements UserInterface {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppUI.this.startGame(new TTTGame(np.getValue()));
+                AppUI.this.startGame(new TTTGame(np.getValue(), cb.isChecked()));
             }
         });
         layout.addView(b);
+        layout.addView(cb);
         ScrollView2D sv = new ScrollView2D(this);
         sv.setContent(layout);
         this.setContentView(sv);
