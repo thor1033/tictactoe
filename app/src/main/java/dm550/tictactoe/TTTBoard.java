@@ -76,8 +76,8 @@ public class TTTBoard {
               try{
                   if(player == 1)
                       this.board[c.getX()][c.getY()] = player;
-                  if(player == 2){
-                      if(aiOn){
+                  else{
+                      if(aiOn && player == 2){
                           eksD.clear();
                           minimax(0, 2, this.board);
                           int max = -100000;
@@ -96,6 +96,7 @@ public class TTTBoard {
                       }
                       else
                           this.board[c.getX()][c.getY()] = player;
+
 
                   }
               }
@@ -147,13 +148,13 @@ public class TTTBoard {
             return vundet;
         return 0;
     }
-    private int checkVert(int dx, int dy){//tjekker den vandret oppe og nede
+    private int checkHori(int dx, int dy){//tjekker den vandret oppe og nede
         if(this.board[dx][dy] == this.board[dx+1][dy] && this.board[dx][dy] == this.board[dx-1][dy] && this.board[dx][dy] != 0) //side-til-side
             return 1;
         else
             return 0;
     }
-    private int checkHori(int dx, int dy){ // Tjekker den lodret højre og venstre
+    private int checkVert(int dx, int dy){ // Tjekker den lodret højre og venstre
         if(this.board[dx][dy] == this.board[dx][dy+1] && this.board[dx][dy] == this.board[dx][dy-1] && this.board[dx][dy] != 0) //side-til-side
             return 1;
         else

@@ -39,6 +39,14 @@ public class AppUI extends AppCompatActivity implements UserInterface {
         np.setMaxValue(6);
         layout.addView(np);
         Button b = new AppCompatButton(this);
+        Button cf = new AppCompatButton(this);
+        cf.setText("PLAY CONNECT FOUR");
+        cf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppUI.this.startGame(new ConnectFourGame());
+            }
+        });
         b.setText("OK");
         b.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +56,7 @@ public class AppUI extends AppCompatActivity implements UserInterface {
         });
         layout.addView(b);
         layout.addView(cb);
+        layout.addView(cf);
         ScrollView2D sv = new ScrollView2D(this);
         sv.setContent(layout);
         this.setContentView(sv);
