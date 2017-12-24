@@ -17,11 +17,7 @@ public class TTTBoard {
      * board[x][y] == 0   signifies free at position (x,y)
      * board[x][y] == i   for i > 0 signifies that Player i made a move on (x,y)
      */
-    public int[][] board = new int[][] {
-            {0, 0, 0},
-            {0, 0, 0},
-            {0, 0, 0}
-    };
+    public int[][] board = new int[][] {};
     public int[] bestMove = {1, 2}; //AiRecursive
     private int intRecursive = 0;
     private int recursiveResult = 0;
@@ -134,13 +130,13 @@ public class TTTBoard {
                 if(vundet != 0)
                     return vundet;
             }
-            if(checkVert(o,0) == 1)
+            if(checkHori(o,0) == 1)
                 vundet = thisBoard[o][0];
-            if(checkVert(o, thisBoard.length-1) == 1)
+            if(checkHori(o, thisBoard.length-1) == 1)
                 vundet = thisBoard[o][thisBoard.length-1];
-            if(checkHori(0,o) == 1)
+            if(checkVert(0,o) == 1)
                 vundet = thisBoard[0][o];
-            if(checkHori(thisBoard.length-1,o) == 1)
+            if(checkVert(thisBoard.length-1,o) == 1)
                 vundet = thisBoard[thisBoard.length-1][o];
         }
 

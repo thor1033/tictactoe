@@ -85,7 +85,7 @@ public class ConnectFourBoard {
             //if(checkHori(thisBoard.length-1,o) == 1)
                 //vundet = thisBoard[thisBoard.length-1][o];
         }
-        vundet = checkDed();
+        //vundet = checkDed();
         if (vundet != 0)
             return vundet;
         return 0;
@@ -106,9 +106,9 @@ public class ConnectFourBoard {
         else
             return 0;
     }
-    private int checkDed(){
+    //private int checkDed(){
 
-        
+
 /*        if(this.board[1][1] == this.board[0][1] && this.board[1][1] == this.board[1][2] &&this.board[1][1] == this.board[1][3] && this.board[1][1] != 0) //Dødt felt i vestre hjørne oppe
             return 1;
         if(this.board[1][1] == this.board[1][0] && this.board[1][1] == this.board[2][1] &&this.board[1][1] == this.board[3][1] && this.board[1][1] != 0) //Dødt felt i vestre hjørne oppe
@@ -128,7 +128,7 @@ public class ConnectFourBoard {
         else
             return 0;*/
 
-    }
+    //}
     private int checkSequence (int dx, int dy){
         if(this.board[dx][dy] == this.board[dx+1][dy+1] && this.board[dx][dy] == this.board[dx-1][dy-1] && this.board[dx-2][dy-2] == this.board[dx][dy] && this.board[dx][dy] != 0) //på skrå nederste
             return 1;
