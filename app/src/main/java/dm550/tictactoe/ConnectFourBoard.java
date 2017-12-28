@@ -69,43 +69,66 @@ public class ConnectFourBoard {
     }
     public int checkWinning(int[][] thisBoard){
         int vundet = 0;
-        for (int o = 2; o < thisBoard.length - 2; o++){
-            for (int u = 2; u < thisBoard.length - 2; u++){
-                if(checkSequence(o,u) == 1)
-                    vundet = thisBoard[o][u];
-                if(vundet != 0)
-                    return vundet;
+        for (int o = 2; o < thisBoard.length - 1; o++) {
+            for (int u = 0; u < thisBoard.length; u++) {
+                if (checkVandret(o, u) == 1) { //Loop for vandret
+                    vundet = this.board[o][u];
+                }
             }
-            //if(checkVert(o,0) == 1)
-                //vundet = thisBoard[o][0];
-            //if(checkVert(o, thisBoard.length-1) == 1)
-                //vundet = thisBoard[o][thisBoard.length-1];
-            //if(checkHori(0,o) == 1)
-                //vundet = thisBoard[0][o];
-            //if(checkHori(thisBoard.length-1,o) == 1)
-                //vundet = thisBoard[thisBoard.length-1][o];
         }
-        //vundet = checkDed();
+        for(int o = 0; o < thisBoard.length; o++){
+            for(int u = 2; u < thisBoard.length -1; u++){
+                if(checkLodret(o,u) == 1){
+                    vundet = this.board[o][u];
+                }
+            }
+        }
+        for(int o = 2; o < thisBoard.length-1; o++){
+            for(int u = 1; u < thisBoard.length-2; u++){
+                if(checkVenstreNedHøjreOp(o,u) == 1){
+                    vundet = this.board[o][u];
+                }
+            }
+        }
+        for(int o = 2; o < thisBoard.length-1; o++){
+            for(int u = 2; u < thisBoard.length-1; u++){
+                if(checkHøjreNedVenstreOp(o,u) == 1){
+                    vundet = this.board[o][u];
+                }
+            }
+        }
+
         if (vundet != 0)
             return vundet;
         return 0;
     }
-    private int checkHori(int dx, int dy){
-        if(this.board[dx][dy] == this.board[dx+1][dy] && this.board[dx][dy] == this.board[dx-1][dy] && this.board[dx-2][dy] == this.board[dx][dy] && this.board[dx][dy] != 0) //side-til-side venstre
-            return 1;
-        if(this.board[dx][dy] == this.board[dx+1][dy] && this.board[dx][dy] == this.board[dx-1][dy] && this.board[dx+2][dy] == this.board[dx][dy] && this.board[dx][dy] != 0) //side-til-side højre
-            return 1;
-        else
-            return 0;
-    }
-    private int checkVert(int dx, int dy){
-        if(this.board[dx][dy] == this.board[dx][dy+1] && this.board[dx][dy] == this.board[dx][dy-1] && this.board[dx][dy-2] == this.board[dx][dy] && this.board[dx][dy] != 0) //side-til-side nederst
-            return 1;
-        if(this.board[dx][dy] == this.board[dx][dy+1] && this.board[dx][dy] == this.board[dx][dy-1] && this.board[dx][dy+2] == this.board[dx][dy] && this.board[dx][dy] != 0) //side-til-side øverst
+
+    private int checkVandret(int dx, int dy){
+        if(this.board[dx][dy] == this.board[dx-1][dy] && this.board[dx][dy] == this.board[dx-2][dy] && this.board[dx+1][dy] == this.board[dx][dy] && this.board[dx][dy] != 0)
             return 1;
         else
             return 0;
     }
+    private int checkLodret(int dx, int dy){
+        if(this.board[dx][dy] == this.board[dx][dy-1]  && this.board[dx][dy] == this.board[dx][dy-2] && this.board[dx][dy+1] == this.board[dx][dy] && this.board[dx][dy] != 0)
+            return 1;
+        else
+            return 0;
+    }
+    private  int checkVenstreNedHøjreOp(int dx, int dy){
+        if(this.board[dx][dy] == this.board[dx+1][dy-1]  && this.board[dx][dy] == this.board[dx-1][dy+1] && this.board[dx-2][dy+2] == this.board[dx][dy] && this.board[dx][dy] != 0)
+            return 1;
+        else
+            return 0;
+    }
+    private int checkHøjreNedVenstreOp(int dx, int dy){
+        if(this.board[dx][dy] == this.board[dx+1][dy+1]  && this.board[dx][dy] == this.board[dx-1][dy-1] && this.board[dx-2][dy-2] == this.board[dx][dy] && this.board[dx][dy] != 0)
+            return 1;
+        else
+            return 0;
+    }
+
+
     //private int checkDed(){
 
 
