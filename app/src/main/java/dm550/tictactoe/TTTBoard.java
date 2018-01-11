@@ -18,13 +18,7 @@ public class TTTBoard {
      * board[x][y] == i   for i > 0 signifies that Player i made a move on (x,y)
      */
     public int[][] board = new int[][] {};
-    public int[] bestMove = {1, 2}; //AiRecursive
-    private int intRecursive = 0;
-    private int recursiveResult = 0;
-    private ArrayList<move> scoreBoard = new ArrayList<>();
-    private int[][] samletScore = new int[3][3];
-
-    private ArrayList<move> eksD = new ArrayList<>();
+    private ArrayList<move> finalScoreBoard = new ArrayList<>();
     
     /** size of the (quadratic) board */
     private int size;
@@ -74,21 +68,18 @@ public class TTTBoard {
                       this.board[c.getX()][c.getY()] = player;
                   else{
                       if(aiOn && player == 2){
-                          eksD.clear();
+                          finalScoreBoard.clear();
                           minimax(0, 2, this.board);
                           int max = -100000;
                           int best = -1;
-                          for (int i = 0; i < eksD.size(); i++){
-                              Log.d(TAG, eksD.get(i).score + " x= " + eksD.get(i).index[0]+ " y= " + eksD.get(i).index[1]);
-                              if(max < eksD.get(i).score && this.board[eksD.get(i).index[0]][eksD.get(i).index[1]] == 0){
-                                  max = eksD.get(i).score;
+                          for (int i = 0; i < finalScoreBoard.size(); i++){ //NOTE, We cannot use the returnMax function since "finalScoreBoard" is not an array of integers
+                              if(max < finalScoreBoard.get(i).score && this.board[finalScoreBoard.get(i).index[0]][finalScoreBoard.get(i).index[1]] == 0){
+                                  max = finalScoreBoard.get(i).score;
                                   best = i;
                               }
                           }
                           //aiRecursive(this.board, player);
-                          this.board[eksD.get(best).index[0]][eksD.get(best).index[1]] = player;
-                          scoreBoard.clear();
-                          samletScore = new int[3][3];
+                          this.board[finalScoreBoard.get(best).index[0]][finalScoreBoard.get(best).index[1]] = player;
                       }
                       else
                           this.board[c.getX()][c.getY()] = player;
@@ -215,7 +206,7 @@ public class TTTBoard {
                 scores.add(currentScore);
                 if(depth == 0){
                     int[] index = new int[]{availableSpots.get(i)[0], availableSpots.get(i)[1]};
-                    eksD.add(new move(index, currentScore));
+                    finalScoreBoard.add(new move(index, currentScore));
                 }
             }
             else if(player == 1){
@@ -225,7 +216,11 @@ public class TTTBoard {
             }
             aiBoard[availableSpots.get(i)[0]][availableSpots.get(i)[1]] = 0;
         }
-        return player == 2 ? returnMax(scores) : returnMin(scores);
+        if (player == 2)
+            return returnMax(scores);
+        else
+            return returnMin(scores);
+        //return player == 2 ? returnMax(scores) : returnMin(scores);
     }
     public int returnMax(List<Integer> list){
         int min = -100000;
@@ -243,7 +238,7 @@ public class TTTBoard {
         int min = 100000;
         int index = 0;
         for (int x = 0; x < list.size(); x++){
-            if(list.get(x) < min ){
+            if(list.get(x) < min ){     
                 min = list.get(x);
                 index = x;
             }
